@@ -31,6 +31,7 @@ npm install react react-dom mobx mobx-react --save
 - [Style-Loader -D](https://github.com/webpack/style-loader)
 - [File-Loader -D](https://github.com/webpack/file-loader)
 - [URL-Loader -D](https://github.com/webpack/url-loader)
+- [http-server -D](https://www.npmjs.com/package/http-server)
 
 ```
 npm install webpack babel-loader babel-preset-es2015 babel-preset-react postcss autoprefixer precss css-loader style-loader file-loader url-loader --save-dev
@@ -77,10 +78,11 @@ Below are the primary objectives of this project as bullet points :
 ## Application Structure
 ![Application Structure Diagram](ReadmeAssets/ApplicationStructure.png)
 
-Each application will pass in the MobX Store via Context from the **High Order Component**.    
->Only passing parts from the MobX Store used by an application may not provide any major benefits to performance due to how MobX works.
+The MobX global store should be accessible from within the HOC and View Components. The approach to achieve this result will be to introduce the MobX Observable store at a level available throughout the entire Third Party Site i.e <body> or similar.
 
->Taking this approach will only result in more rigid applications that require additional refactoring to maintain the State Re-Shaping process
+There should be no performance cost making the entire MobX store available like this due to how MobX works (will need testing).
+
+>The alterative; passing sections of the full store into relevant components will result in more rigid applications that require additional refactoring to maintain the State Re-Shaping process.
 
 [Back to the Top](#contents)    
 

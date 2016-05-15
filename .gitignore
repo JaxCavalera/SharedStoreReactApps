@@ -46,8 +46,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Node Modules
+# Dev Only Directories
 node_modules
+.vscode
 
 # Build Output
 build

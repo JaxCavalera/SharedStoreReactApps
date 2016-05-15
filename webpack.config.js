@@ -3,7 +3,7 @@ var autoprefixer = require('autoprefixer');
 var precss = require('precss');
 
 var ROOT_PATH = path.resolve(__dirname, 'Features');
-var BUILD_PATH = path.resolve(ROOT_PATH, 'Build');
+var BUILD_PATH = path.resolve(ROOT_PATH, '../ThirdPartySite/js');
 
 module.exports = {
     entry: '',
