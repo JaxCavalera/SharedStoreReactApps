@@ -85,7 +85,8 @@ Each application will pass in the MobX Store via Context from the **High Order C
 ```
 Only passing parts from the MobX Store used by an application may not provide any major benefits to performance due to how MobX works.
 
-Taking this approach will only result in more rigid applications that require additional refactoring to maintain the State Re-Shaping process```
+Taking this approach will only result in more rigid applications that require additional refactoring to maintain the State Re-Shaping process
+```
 
 [Back to the Top](#contents)    
 
@@ -93,7 +94,8 @@ Taking this approach will only result in more rigid applications that require ad
 When creating a new React application, a webpack config file that extends the base config will be included in the root directory. A unique NPM Script will launch using an alias that matches the target React application.
 >e.g.    
 **React App Name** : show-name-widget    
-**NPM Scripts** : ```
+**NPM Scripts** :
+```
 "scripts": {
     "DevbundleShowNameWidget": "webpack --config Features/ShowNameWidget/ShowNameWidgetDevConfig.js --watch",
     "ProdbundleShowNameWidget": "NODE_ENV=production && webpack --config Features/ShowNameWidget/ShowNameWidgetProdConfig.js"
