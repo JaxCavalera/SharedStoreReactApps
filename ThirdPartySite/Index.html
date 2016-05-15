@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Third Party Site</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            var data = {
+                users : [
+                    {name : 'Jack', age : 25},
+                    {name : 'Bob', age : 32},
+                    {name : 'Tim', age : 15}
+                ]
+            };
+
+            var jackMatch = (data.users).find(function(i) {
+                return i.name === 'Jack';
+            });
+
+            var bobMatch = (data.users).find(function(i) {
+                return i.name === 'Bob';
+            });
+
+            var router = function(routes) {
+                var state = {};
+
+                return history.pushState(state, routes);
+            };
+        </script>
+    </body>
+</html>
