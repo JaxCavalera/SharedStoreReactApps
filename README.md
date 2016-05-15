@@ -61,14 +61,10 @@ Below are the primary objectives of this project as bullet points :
 - Inject multiple React applications into a third party site.    
 
 - Distribute state through each React application using Context.
-```
-As the MobX store will be global, Context may not be required
-```
+>As the MobX store will be global, Context may not be required
 
 - All applications should be Router-Less    
-```
-The upgrade to multiple routed applications can be an expansion objective
-```    
+>The upgrade to multiple routed applications can be an expansion objective
 
 - When a React application's componentWillMount() function invokes :
     - Relevant Action Creators will trigger establishing the initial state for the component in the Global MobX store.
@@ -81,12 +77,10 @@ The upgrade to multiple routed applications can be an expansion objective
 ## Application Structure
 ![Application Structure Diagram](ReadmeAssets/ApplicationStructure.png)
 
-Each application will pass in the MobX Store via Context from the **High Order Component**.
-```
-Only passing parts from the MobX Store used by an application may not provide any major benefits to performance due to how MobX works.
+Each application will pass in the MobX Store via Context from the **High Order Component**.    
+>Only passing parts from the MobX Store used by an application may not provide any major benefits to performance due to how MobX works.
 
-Taking this approach will only result in more rigid applications that require additional refactoring to maintain the State Re-Shaping process
-```
+>Taking this approach will only result in more rigid applications that require additional refactoring to maintain the State Re-Shaping process
 
 [Back to the Top](#contents)    
 
@@ -95,7 +89,7 @@ When creating a new React application, a webpack config file that extends the ba
 >e.g.    
 **React App Name** : show-name-widget    
 **NPM Scripts** :
-```
+```javascript
 "scripts": {
     "DevbundleShowNameWidget": "webpack --config Features/ShowNameWidget/ShowNameWidgetDevConfig.js --watch",
     "ProdbundleShowNameWidget": "NODE_ENV=production && webpack --config Features/ShowNameWidget/ShowNameWidgetProdConfig.js"
