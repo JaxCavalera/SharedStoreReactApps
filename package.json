@@ -4,9 +4,10 @@
   "description": "drive multiple react apps from a single mobx store",
   "main": "README.md",
   "scripts": {
+    "eslint": "eslint --init",
     "server": "http-server ./ThirdPartySite",
-    "DevbundleShowNameWidget": "webpack --config Features/ShowNameWidget/ShowNameWidgetDevConfig.js --watch",
-    "ProdbundleShowNameWidget": "NODE_ENV=production && webpack --config Features/ShowNameWidget/ShowNameWidgetProdConfig.js"
+    "DevbundleSelectNameWidget": "webpack --config Features/SelectNameWidget/SelectNameWidgetDevConfig.js --watch",
+    "ProdbundleSelectNameWidget": "NODE_ENV=production && webpack --config Features/SelectNameWidget/SelectNameWidgetProdConfig.js"
   },
   "keywords": [
     "react"
@@ -21,10 +22,13 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
+    "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-react": "^6.5.0",
     "css-loader": "^0.23.1",
+    "eslint": "^2.10.2",
+    "eslint-plugin-react": "^5.1.1",
     "file-loader": "^0.8.5",
     "http-server": "^0.9.0",
     "postcss": "^5.0.21",

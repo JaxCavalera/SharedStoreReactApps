@@ -76,7 +76,16 @@ Below are the primary objectives of this project as bullet points :
 [Back to the Top](#contents)    
 
 ## Application Structure
-![Application Structure Diagram](ReadmeAssets/ApplicationStructure.png)
+![Application Structure Diagram](ReadmeAssets/ApplicationStructure.png)    
+
+Each widget has a dev and prod webpack config at the root directory. This config file targets the Index.js which contains a ReactDOM.render() function.   
+![Project Directory Structure](ReadmeAssets/ProjectDirectoryStructure.png)    
+
+A Higher order Component (HOC) is used to combine the primary components inside a widget.    
+![Component Structures](ReadmeAssets/ComponentsRootDirectoryStructure.png)    
+
+Each component contains a **View**, **Display**, **Actions** and **Stylesheet** file. Child components should be nested in a namespaced directory using the same pattern as their parent.    
+![Features Overview Structure](ReadmeAssets/FeaturesOverviewStructure.png)    
 
 The MobX global store should be accessible from within the HOC and View Components. The approach to achieve this result will be to introduce the MobX Observable store at a level available throughout the entire Third Party Site i.e <body> or similar.
 
@@ -89,16 +98,16 @@ There should be no performance cost making the entire MobX store available like 
 ## Dev Environment Setup
 When creating a new React application, a webpack config file that extends the base config will be included in the root directory. A unique NPM Script will launch using an alias that matches the target React application.
 >e.g.    
-**React App Name** : show-name-widget    
+**React App Name** : SelectNameWidget    
 **NPM Scripts** :
 ```javascript
 "scripts": {
-    "DevbundleShowNameWidget": "webpack --config Features/ShowNameWidget/ShowNameWidgetDevConfig.js --watch",
-    "ProdbundleShowNameWidget": "NODE_ENV=production && webpack --config Features/ShowNameWidget/ShowNameWidgetProdConfig.js"
+    "DevbundleSelectNameWidget": "webpack --config Features/SelectNameWidget/SelectNameWidgetDevConfig.js --watch",
+    "ProdbundleSelectNameWidget": "NODE_ENV=production && webpack --config Features/SelectNameWidget/SelectNameWidgetProdConfig.js"
 }
 ```    
 
-Both **ShowNameWidget** config files will import the base config file and proceed to extend as needed. The benefit to this approach will become more apparent when there are lots of React apps associated with a project. Developers working on a specific widget are able to quickly run a build by prefixing the directory name with **Devbundle** or **Prodbundle**.
+Both **SelectNameWidget** config files will import the base config file and proceed to extend as needed. The benefit to this approach will become more apparent when there are lots of React apps associated with a project. Developers working on a specific widget are able to quickly run a build by prefixing the directory name with **Devbundle** or **Prodbundle**.
 
 [Back to the Top](#contents)    
 

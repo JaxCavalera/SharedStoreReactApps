@@ -51,4 +51,4 @@ node_modules
 .vscode
 
 # Build Output
-build
+ThirdPartySite\js

@@ -54,27 +54,26 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _ShowNameWidgetHOC = __webpack_require__(168);
+	var _SelectNameWidgetHOC = __webpack_require__(168);
 
-	var _ShowNameWidgetHOC2 = _interopRequireDefault(_ShowNameWidgetHOC);
+	var _SelectNameWidgetHOC2 = _interopRequireDefault(_SelectNameWidgetHOC);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// locate all DOM nodes with the class "ShowNameWidgetContainer"
+	// locate all DOM nodes with the class "selectNameWidgetContainer"
+	// render a copy of the react application inside each of them
 	var injectShowNameWidget = function injectShowNameWidget() {
-	    var containerDiv = document.getElementsByClassName('ShowNameWidgetContainer');
+	    var containerDiv = document.getElementsByClassName('selectNameWidgetContainer');
 
-	    // scan for all instances of the target class name and render a copy of the
-	    // react application inside each of them
 	    for (var i = 0; containerDiv.length > i; i++) {
-	        (0, _reactDom.render)(_react2.default.createElement(_ShowNameWidgetHOC2.default, null), containerDiv[i]);
+	        (0, _reactDom.render)(_react2.default.createElement(_SelectNameWidgetHOC2.default, null), containerDiv[i]);
 	    }
 	};
 
 	// run the react app injection once the DOM has finished loading
 
 
-	// import HOC for ShowNameWidget application
+	// import HOC for the SelectNameWidget application
 	window.addEventListener('load', function () {
 	    injectShowNameWidget();
 	});
@@ -20186,6 +20185,14 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _ShowNameView = __webpack_require__(169);
+
+	var _ShowNameView2 = _interopRequireDefault(_ShowNameView);
+
+	var _NameDropdownListView = __webpack_require__(171);
+
+	var _NameDropdownListView2 = _interopRequireDefault(_NameDropdownListView);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20194,39 +20201,221 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	// import {render} from 'react-dom';
-
 	// import child view components
-	// import
 
-	var ShowNameWidgetHOC = function (_Component) {
-	    _inherits(ShowNameWidgetHOC, _Component);
 
-	    function ShowNameWidgetHOC() {
-	        _classCallCheck(this, ShowNameWidgetHOC);
+	var SelectNameWidgetHOC = function (_Component) {
+	    _inherits(SelectNameWidgetHOC, _Component);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ShowNameWidgetHOC).apply(this, arguments));
+	    function SelectNameWidgetHOC() {
+	        _classCallCheck(this, SelectNameWidgetHOC);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectNameWidgetHOC).apply(this, arguments));
 	    }
 
-	    _createClass(ShowNameWidgetHOC, [{
+	    _createClass(SelectNameWidgetHOC, [{
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'ShowNameWidgetHOC' },
-	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    'test text'
-	                )
+	                { className: 'selectNameWidgetHOC' },
+	                _react2.default.createElement(_NameDropdownListView2.default, null),
+	                _react2.default.createElement(_ShowNameView2.default, null)
 	            );
 	        }
 	    }]);
 
-	    return ShowNameWidgetHOC;
+	    return SelectNameWidgetHOC;
 	}(_react.Component);
 
-	exports.default = ShowNameWidgetHOC;
+	exports.default = SelectNameWidgetHOC;
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _ShowNameActions = __webpack_require__(172);
+
+	var _ShowNameDisplay = __webpack_require__(170);
+
+	var _ShowNameDisplay2 = _interopRequireDefault(_ShowNameDisplay);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// import actions file for interfacing with the store
+
+
+	// import display components
+
+
+	var ShowNameView = function (_Component) {
+	    _inherits(ShowNameView, _Component);
+
+	    function ShowNameView() {
+	        _classCallCheck(this, ShowNameView);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ShowNameView).apply(this, arguments));
+	    }
+
+	    _createClass(ShowNameView, [{
+	        key: 'render',
+	        value: function render() {
+	            // will replace 'nick' with a another action like SelectedDropdownName()
+	            var nameValue = (0, _ShowNameActions.CheckNameValue)('nick').name;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'showNameView' },
+	                _react2.default.createElement(_ShowNameDisplay2.default, { selectedName: nameValue })
+	            );
+	        }
+	    }]);
+
+	    return ShowNameView;
+	}(_react.Component);
+
+	exports.default = ShowNameView;
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ShowNameDisplay = function (_Component) {
+	    _inherits(ShowNameDisplay, _Component);
+
+	    function ShowNameDisplay() {
+	        _classCallCheck(this, ShowNameDisplay);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ShowNameDisplay).apply(this, arguments));
+	    }
+
+	    _createClass(ShowNameDisplay, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "showNameDisplay" },
+	                this.props.selectedName
+	            );
+	        }
+	    }]);
+
+	    return ShowNameDisplay;
+	}(_react.Component);
+
+	//  declare PropTypes here to check that props match expected type
+
+
+	exports.default = ShowNameDisplay;
+	ShowNameDisplay.propTypes = {
+	    selectedName: _react.PropTypes.string.isRequired
+	};
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// import display components
+	// import ShowNameDisplay from './ShowNameDisplay.js';
+
+	var NameDropdownListView = function (_Component) {
+	    _inherits(NameDropdownListView, _Component);
+
+	    function NameDropdownListView() {
+	        _classCallCheck(this, NameDropdownListView);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(NameDropdownListView).apply(this, arguments));
+	    }
+
+	    _createClass(NameDropdownListView, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement("div", { className: "nameDropdownListView" });
+	        }
+	    }]);
+
+	    return NameDropdownListView;
+	}(_react.Component);
+
+	exports.default = NameDropdownListView;
+
+/***/ },
+/* 172 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	// functions in here are used to interface with the global MobX store and View components
+	var mockStore = {
+	    users: [{ name: 'nick', age: 25 }, { name: 'bob', age: 32 }, { name: 'tim', age: 15 }]
+	};
+
+	var CheckNameValue = exports.CheckNameValue = function CheckNameValue(nameToCheck) {
+	    return mockStore.users.find(function (i) {
+	        return i.name === nameToCheck;
+	    });
+	};
 
 /***/ }
 /******/ ]);

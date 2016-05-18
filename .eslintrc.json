@@ -1,32 +1,37 @@
 {
-    "env": {},
+    "env": {
+        "browser": true,
+        "node": true,
+        "mocha": true,
+        "jquery": true,
+        "es6": true
+    },
     "globals": {},
     "ecmaFeatures": {
-        "arrowFunctions": true,
+        "generators": true,
+        "forOf": true,
         "binaryLiterals": true,
-        "blockBindings": true,
         "classes": true,
         "defaultParams": true,
-        "destructuring": true,
-        "forOf": true,
-        "generators": true,
         "modules": true,
-        "objectLiteralComputedProperties": true,
-        "objectLiteralDuplicateProperties": true,
-        "objectLiteralShorthandMethods": true,
-        "objectLiteralShorthandProperties": true,
-        "octalLiterals": true,
-        "regexUFlag": true,
-        "regexYFlag": true,
-        "spread": true,
-        "experimentalObjectRestSpread": true,
-        "superInFunctions": true,
         "templateStrings": true,
         "unicodeCodePointEscapes": true,
+        "objectLiteralDuplicateProperties": true,
+        "objectLiteralShorthandProperties": true,
+        "octalLiterals": true,
+        "jsx": true,
+        "destructuring": true,
+        "objectLiteralComputedProperties": true,
+        "arrowFunctions": true,
+        "spread": true,
         "globalReturn": true,
-        "jsx": true
+        "objectLiteralShorthandMethods": true,
+        "regexUFlag": true,
+        "superInFunctions": true,
+        "blockBindings": true,
+        "regexYFlag": true
     },
-    "parser": null,
+    "parser": "babel-eslint",
     "rules": {
         "accessor-pairs": [
             2, {
@@ -37,6 +42,10 @@
             2, {
                 "skipBlankLines": true
             }
+        ],
+        "semi": [
+            "error",
+            "always"
         ],
         "react/forbid-prop-types": 0,
         "react/jsx-boolean-value": 1,
@@ -73,12 +82,12 @@
             2, {
                 "vars": "all",
                 "args": "all"
-            },
+            }
         ],
         "no-use-before-define": 2,
         "jsx-quotes": 1
     },
     "plugins": [
-        "react",
+        "react"
     ]
 }
