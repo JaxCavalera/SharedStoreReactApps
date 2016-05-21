@@ -5,6 +5,9 @@ import {extendObservable} from 'mobx';
  * =======================
  * functions in this section should be extricated to a separate module as outlined
  * in the Readme file under "Extended Objectives"
+ * in a production implementation of this it might be nice to include
+ * some error handling on the helper functions where appropriate
+ * try catch might be sufficient
  */
 
 /**
@@ -42,10 +45,42 @@ export let checkIsPropInUse = (storeLocation, propName) => {
     return Object.keys(storeLocation[propName].inUse).length > 0;
 };
 
-export let setPropInUse = (storeLocation, propName, componentName) => {
-
+/**
+ * add the component to the "inUse" array
+ * @param  {object} storeLocation - object being used as the store
+ * @param  {string} propName      - check the "inUse" value for this prop
+ * @param  {string} componentName - value to check for
+ */
+export let setPropInUseForComponent = (storeLocation, propName, componentName) => {
+    storeLocation[propName].inUse.push(componentName);
 };
 
+/**
+ * removes the component from the "inUse" array
+ * @param  {object} storeLocation - object being used as the store
+ * @param  {string} propName      - check the "inUse" value for this prop
+ * @param  {string} componentName - value to remove
+ */
+export let unsetPropInUseForComponent = (storeLocation, propName, componentName) => {
+    let componentPos = storeLocation[propName].inUse.indexOf(componentName);
+    storeLocation[propName].inUse.splice(componentPos, 1);
+};
+
+/**
+ * adds a new state property (object) to the MobX Store
+ * @param  {object} storeLocation - object being used as the store
+ * @param  {string} propName      - name used to reference state being added
+ * @param  {object} propValue     - state object being added
+ * @param  {string} componentName - first component using the new state object
+ */
+export let addPropToStore = (storeLocation, propName, propValue, componentName) => {
+    extendObservable(storeLocation, {[propName] : propValue});
+    storeLocation[propName].inUse = [];
+    setPropInUseForComponent(storeLocation, propName, componentName);
+};
+
+// needs cleaning up as a lot of this functionality is handled by helper
+// functions now
 export let fetchUsersList = () => {
     // only create the users property if it doesn't exist in the store
     if (checkStoreForProp(mobXGlobalStore, 'users')) {

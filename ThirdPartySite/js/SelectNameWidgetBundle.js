@@ -20303,15 +20303,20 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.checkNameValue = exports.fetchUsersList = exports.setPropInUse = exports.checkIsPropInUse = exports.checkIsPropInUseByComponent = exports.checkStoreForProp = undefined;
+	exports.checkNameValue = exports.fetchUsersList = exports.addPropToStore = exports.unsetPropInUseForComponent = exports.setPropInUseForComponent = exports.checkIsPropInUse = exports.checkIsPropInUseByComponent = exports.checkStoreForProp = undefined;
 
 	var _mobx = __webpack_require__(173);
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	/**
 	 * Shared Helper Functions
 	 * =======================
 	 * functions in this section should be extricated to a separate module as outlined
 	 * in the Readme file under "Extended Objectives"
+	 * in a production implementation of this it might be nice to include
+	 * some error handling on the helper functions where appropriate
+	 * try catch might be sufficient
 	 */
 
 	/**
@@ -20349,8 +20354,42 @@
 	    return Object.keys(storeLocation[propName].inUse).length > 0;
 	};
 
-	var setPropInUse = exports.setPropInUse = function setPropInUse(storeLocation, propName, componentName) {};
+	/**
+	 * add the component to the "inUse" array
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - check the "inUse" value for this prop
+	 * @param  {string} componentName - value to check for
+	 */
+	var setPropInUseForComponent = exports.setPropInUseForComponent = function setPropInUseForComponent(storeLocation, propName, componentName) {
+	    storeLocation[propName].inUse.push(componentName);
+	};
 
+	/**
+	 * removes the component from the "inUse" array
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - check the "inUse" value for this prop
+	 * @param  {string} componentName - value to remove
+	 */
+	var unsetPropInUseForComponent = exports.unsetPropInUseForComponent = function unsetPropInUseForComponent(storeLocation, propName, componentName) {
+	    var componentPos = storeLocation[propName].inUse.indexOf(componentName);
+	    storeLocation[propName].inUse.splice(componentPos, 1);
+	};
+
+	/**
+	 * adds a new state property (object) to the MobX Store
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - name used to reference state being added
+	 * @param  {object} propValue     - state object being added
+	 * @param  {string} componentName - first component using the new state object
+	 */
+	var addPropToStore = exports.addPropToStore = function addPropToStore(storeLocation, propName, propValue, componentName) {
+	    (0, _mobx.extendObservable)(storeLocation, _defineProperty({}, propName, propValue));
+	    storeLocation[propName].inUse = [];
+	    setPropInUseForComponent(storeLocation, propName, componentName);
+	};
+
+	// needs cleaning up as a lot of this functionality is handled by helper
+	// functions now
 	var fetchUsersList = exports.fetchUsersList = function fetchUsersList() {
 	    // only create the users property if it doesn't exist in the store
 	    if (checkStoreForProp(mobXGlobalStore, 'users')) {
