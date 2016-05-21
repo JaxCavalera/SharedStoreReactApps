@@ -54,6 +54,25 @@ Below are the benefits and problems associated with using a local store for each
 
 - Opens up more potential for code rot
 
+>To prevent worrying about having a nameSpaced Global store object such as `let mobXGlobalStore = {};`, an NPM Script could be used to bundle all applications loading on a page into a single file and placing the Global store at the top.
+
+>For instance, wrapping all applications loading on a page into an IIFE and having the **mobXGlobalStore** inside the IIFE but outside the scope of individual applications.
+
+```
+(function() {
+    var mobXGlobalStore = {};
+
+    (function() {
+        // SelectNameWidget
+    })();
+
+    (function() {
+        // SelectAgeWidget
+    })();
+
+})();
+```
+
 [Back to the Top](#contents)    
 
 ## Objectives
@@ -81,7 +100,8 @@ Below are the primary objectives of this project as bullet points :
 Each widget has a dev and prod webpack config at the root directory. This config file targets the Index.js which contains a ReactDOM.render() function.   
 ![Project Directory Structure](ReadmeAssets/ProjectDirectoryStructure.png)    
 
-A Higher order Component (HOC) is used to combine the primary components inside a widget.    
+A Higher order Component (HOC) is used to combine the primary components inside a widget.
+>This could be replaced by a Pod (View, Stylesheet, Actions) but since it's unlikely to have any functionality other than composing the widget's components. a View is more than sufficient.    
 ![Component Structures](ReadmeAssets/ComponentsRootDirectoryStructure.png)    
 
 Each component contains a **View**, **Display**, **Actions** and **Stylesheet** file. Child components should be nested in a namespaced directory using the same pattern as their parent.    
@@ -115,5 +135,19 @@ Both **SelectNameWidget** config files will import the base config file and proc
 The following objectives are listed as potential expansion upon the completion of the main project. Their viability is subject to change based upon the outcomes of the main project.    
 
 - Use [pushState Routing](https://developer.mozilla.org/en-US/docs/Web/API/History_API) to control the current state of multiple applications on the same page.    
+
+- Move shared helper functions into a library / module.
+>In either scenario, if as a library you could publish the helpers with documentation as an NPM Package or use path.resolve in webpack :
+http://stackoverflow.com/a/27512914/4181923
+```
+var path = require('path');
+
+// ...
+
+resolve: {
+    root: path.resolve('./mydir'),
+    extensions: ['', '.js']
+}
+```
 
 [Back to the Top](#contents)    
