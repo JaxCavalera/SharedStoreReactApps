@@ -177,7 +177,7 @@ Checks the store for a specific property
 >@param2 {string} propName      - check the store to see if this property exists    
 >@return {bool}                 - returns true if the property exists in the store    
 
-[Back to Function List](#mobx=store-helpers)    
+[Back to Function List](#mobx-store-helpers)    
 
 #### checkIsPropInUseByComponent
 Checks if the given component is using a specific property    
@@ -186,7 +186,7 @@ Checks if the given component is using a specific property
 >@param3 {string} componentName - value to check for    
 >@return {bool}                 - returns true if the property is being used    
 
-[Back to Function List](#mobx=store-helpers)    
+[Back to Function List](#mobx-store-helpers)    
 
 #### checkIsPropInUse
 Checks if a specific property is "inUse" by any components    
@@ -194,7 +194,7 @@ Checks if a specific property is "inUse" by any components
 >@param2 {string} propName      - check the "inUse" value for this prop    
 >@return {bool}                 - returns true if the property is being used    
 
-[Back to Function List](#mobx=store-helpers)    
+[Back to Function List](#mobx-store-helpers)    
 
 #### setPropInUseForComponent
 Add a specific component to the "inUse" array    
@@ -202,7 +202,7 @@ Add a specific component to the "inUse" array
 >@param2 {string} propName      - check the "inUse" value for this prop    
 >@param3 {string} componentName - value to push into the "inUse" array    
 
-[Back to Function List](#mobx=store-helpers)    
+[Back to Function List](#mobx-store-helpers)    
 
 #### unsetPropInUseForComponent
 Removes a specific component from the "inUse" array    
@@ -210,7 +210,7 @@ Removes a specific component from the "inUse" array
 >@param2 {string} propName      - target the "inUse" value for this prop    
 >@param3 {string} componentName - value to remove from the "inUse" array    
 
-[Back to Function List](#mobx=store-helpers)    
+[Back to Function List](#mobx-store-helpers)    
 
 #### addPropToStore
 Adds a new state property (object) to the MobX Store    
@@ -219,13 +219,13 @@ Adds a new state property (object) to the MobX Store
 >@param3 {object} propValue     - state object being added    
 >@param4 {string} componentName - first component using the new state object    
 
-[Back to Function List](#mobx=store-helpers)    
+[Back to Function List](#mobx-store-helpers)    
 
 #### removePropFromStore
 Removes an existing state property (object) from the MobX Store    
 >@param1 {object} storeLocation - object being used as the store    
 >@param2 {string} propName      - name used to reference state being removed    
 
-[Back to Function List](#mobx=store-helpers)    
+[Back to Function List](#mobx-store-helpers)    
 
 [Back to the Top](#contents)    
