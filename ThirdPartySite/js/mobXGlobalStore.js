@@ -9,4 +9,4 @@
 * multiple Entry bundles :
 * https://webpack.github.io/docs/code-splitting.html
 **/
-var mobXGlobalStore = {};
+window.mobXGlobalStore = {};

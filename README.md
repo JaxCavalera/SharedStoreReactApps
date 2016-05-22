@@ -8,6 +8,8 @@
 [Application Structure](#application-structure)    
 [Dev Environment Setup](#dev-environment-setup)    
 [Potential Expansion Objectives](#potential-expansion-objectives)    
+[Project Specific Modules](#project-specific-modules)    
+[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ◊ MobX Store Helpers](#mobx-store-helpers)    
 
 ## Introduction
 The purpose of this project is to investigate the potential for driving multiple React Apps from a single MobX Store.
@@ -136,18 +138,94 @@ The following objectives are listed as potential expansion upon the completion o
 
 - Use [pushState Routing](https://developer.mozilla.org/en-US/docs/Web/API/History_API) to control the current state of multiple applications on the same page.    
 
-- Move shared helper functions into a library / module.
->In either scenario, if as a library you could publish the helpers with documentation as an NPM Package or use path.resolve in webpack :
-http://stackoverflow.com/a/27512914/4181923
+- Include an example [here](#project-specific-modules) for each helper function in the [extricated module](ProjectSpecificModules/mobXStoreHelpers.js).
+>In either scenario, if as a library you could publish the helpers with documentation as an NPM Package or use path.resolve in webpack : http://stackoverflow.com/a/27512914/4181923    
+
 ```
 var path = require('path');
-
-// ...
 
 resolve: {
     root: path.resolve('./mydir'),
     extensions: ['', '.js']
 }
 ```
+
+- Update component structures where needed to ensure that a separate view/display/actions/stylesheet are associated with the retrieval and presentation of collections of data (a list of todo tasks).
+https://mobxjs.github.io/mobx/best/react-performance.html    
+
+[Back to the Top](#contents)    
+
+
+## Project Specific Modules
+The following are project specific modules which are imported / required as though they were npm modules by using Webpack's resolve.root feature.
+
+### MobX Store Helpers
+MobX Store Helpers are functions specific to maintaining the MobX Global Store.
+
+**List of Functions**    
+[checkStoreForProp](#checkstoreforprop)    
+[checkIsPropInUseByComponent](#checkispropinusebycomponent)    
+[checkIsPropInUse](#checkispropinuse)    
+[setPropInUseForComponent](#setpropinuseforcomponent)    
+[unsetPropInUseForComponent](#unsetpropinuseforcomponent)    
+[addPropToStore](#addproptostore)    
+[removePropFromStore](#removepropfromstore)    
+
+#### checkStoreForProp
+Checks the store for a specific property    
+>@param1 {object} storeLocation - object being used as the store    
+>@param2 {string} propName      - check the store to see if this property exists    
+>@return {bool}                 - returns true if the property exists in the store    
+
+[Back to Function List](#mobx=store-helpers)    
+
+#### checkIsPropInUseByComponent
+Checks if the given component is using a specific property    
+>@param1 {object} storeLocation - object being used as the store    
+>@param2 {string} propName      - check the "inUse" value for this prop    
+>@param3 {string} componentName - value to check for    
+>@return {bool}                 - returns true if the property is being used    
+
+[Back to Function List](#mobx=store-helpers)    
+
+#### checkIsPropInUse
+Checks if a specific property is "inUse" by any components    
+>@param1 {object} storeLocation - object being used as the store    
+>@param2 {string} propName      - check the "inUse" value for this prop    
+>@return {bool}                 - returns true if the property is being used    
+
+[Back to Function List](#mobx=store-helpers)    
+
+#### setPropInUseForComponent
+Add a specific component to the "inUse" array    
+>@param1 {object} storeLocation - object being used as the store    
+>@param2 {string} propName      - check the "inUse" value for this prop    
+>@param3 {string} componentName - value to push into the "inUse" array    
+
+[Back to Function List](#mobx=store-helpers)    
+
+#### unsetPropInUseForComponent
+Removes a specific component from the "inUse" array    
+>@param1 {object} storeLocation - object being used as the store    
+>@param2 {string} propName      - target the "inUse" value for this prop    
+>@param3 {string} componentName - value to remove from the "inUse" array    
+
+[Back to Function List](#mobx=store-helpers)    
+
+#### addPropToStore
+Adds a new state property (object) to the MobX Store    
+>@param1 {object} storeLocation - object being used as the store    
+>@param2 {string} propName      - name used to reference state being added    
+>@param3 {object} propValue     - state object being added    
+>@param4 {string} componentName - first component using the new state object    
+
+[Back to Function List](#mobx=store-helpers)    
+
+#### removePropFromStore
+Removes an existing state property (object) from the MobX Store    
+>@param1 {object} storeLocation - object being used as the store    
+>@param2 {string} propName      - name used to reference state being removed    
+
+[Back to Function List](#mobx=store-helpers)    
 
 [Back to the Top](#contents)    

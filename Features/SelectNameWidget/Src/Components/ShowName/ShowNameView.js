@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
+import { observer } from 'mobx-react';
 
 // import actions file for interfacing with the store
-import { checkNameValue } from './ShowNameActions.js';
+import { buildStore, cleanStore, getSelectedDropdownName } from './ShowNameActions.js';
 
 // import display components
 import ShowNameDisplay from './ShowNameDisplay.js';
 
-export default class ShowNameView extends Component {
+/**
+ * wrapping the component in the observer function causes a
+ * re-render when an observable prop value changes
+ */
+export default observer(class ShowNameView extends Component {
+    componentWillMount() {
+        buildStore();
+    };
+
+    componentWillUnmount() {
+        cleanStore();
+    };
+
     render () {
-        // will replace 'nick' with a another action like SelectedDropdownName()
-        let nameValue = checkNameValue('nick').name;
+
+        let nameValue = getSelectedDropdownName();
 
         return (
             <div className="showNameView">
@@ -17,4 +30,4 @@ export default class ShowNameView extends Component {
             </div>
         );
     }
-}
+});

@@ -20189,7 +20189,7 @@
 
 	var _ShowNameView2 = _interopRequireDefault(_ShowNameView);
 
-	var _NameDropdownListView = __webpack_require__(172);
+	var _NameDropdownListView = __webpack_require__(174);
 
 	var _NameDropdownListView2 = _interopRequireDefault(_NameDropdownListView);
 
@@ -20246,9 +20246,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _mobxReact = __webpack_require__(175);
+
 	var _ShowNameActions = __webpack_require__(170);
 
-	var _ShowNameDisplay = __webpack_require__(171);
+	var _ShowNameDisplay = __webpack_require__(173);
 
 	var _ShowNameDisplay2 = _interopRequireDefault(_ShowNameDisplay);
 
@@ -20266,7 +20268,11 @@
 	// import display components
 
 
-	var ShowNameView = function (_Component) {
+	/**
+	 * wrapping the component in the observer function causes a
+	 * re-render when an observable prop value changes
+	 */
+	exports.default = (0, _mobxReact.observer)(function (_Component) {
 	    _inherits(ShowNameView, _Component);
 
 	    function ShowNameView() {
@@ -20276,10 +20282,20 @@
 	    }
 
 	    _createClass(ShowNameView, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            (0, _ShowNameActions.buildStore)();
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            (0, _ShowNameActions.cleanStore)();
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            // will replace 'nick' with a another action like SelectedDropdownName()
-	            var nameValue = (0, _ShowNameActions.checkNameValue)('nick').name;
+
+	            var nameValue = (0, _ShowNameActions.getSelectedDropdownName)();
 
 	            return _react2.default.createElement(
 	                'div',
@@ -20290,9 +20306,7 @@
 	    }]);
 
 	    return ShowNameView;
-	}(_react.Component);
-
-	exports.default = ShowNameView;
+	}(_react.Component));
 
 /***/ },
 /* 170 */
@@ -20303,219 +20317,61 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.checkNameValue = exports.fetchUsersList = exports.addPropToStore = exports.unsetPropInUseForComponent = exports.setPropInUseForComponent = exports.checkIsPropInUse = exports.checkIsPropInUseByComponent = exports.checkStoreForProp = undefined;
+	exports.getSelectedDropdownName = exports.cleanStore = exports.buildStore = exports.fetchUsersList = undefined;
 
-	var _mobx = __webpack_require__(173);
+	var _mobx = __webpack_require__(171);
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	var _mobXStoreHelpers = __webpack_require__(172);
 
-	/**
-	 * Shared Helper Functions
-	 * =======================
-	 * functions in this section should be extricated to a separate module as outlined
-	 * in the Readme file under "Extended Objectives"
-	 * in a production implementation of this it might be nice to include
-	 * some error handling on the helper functions where appropriate
-	 * try catch might be sufficient
-	 */
-
-	/**
-	 * checks the store for a specific property
-	 * @param  {object} storeLocation - object being used as the store
-	 * @param  {string} propName      - check the store to see if this property exists
-	 * @return {bool}                 - returns true if the property exists in the store
-	 */
-	var checkStoreForProp = exports.checkStoreForProp = function checkStoreForProp(storeLocation, propName) {
-	    return storeLocation[propName] ? true : false;
-	};
-
-	/**
-	 * checks if the given component is using a specific property
-	 * @param  {object} storeLocation - object being used as the store
-	 * @param  {string} propName      - check the "inUse" value for this prop
-	 * @param  {string} componentName - value to check for
-	 * @return {bool}                 - returns true if the property is being used
-	 */
-	var checkIsPropInUseByComponent = exports.checkIsPropInUseByComponent = function checkIsPropInUseByComponent(storeLocation, propName, componentName) {
-	    var result = storeLocation[propName].inUse.filter(function (i) {
-	        return i == componentName;
-	    });
-
-	    return result.length > 0;
-	};
-
-	/**
-	 * checks if a specific property is in use by any components
-	 * @param  {object} storeLocation - object being used as the store
-	 * @param  {string} propName      - check the "inUse" value for this prop
-	 * @return {bool}                 - returns true if the property is being used
-	 */
-	var checkIsPropInUse = exports.checkIsPropInUse = function checkIsPropInUse(storeLocation, propName) {
-	    return Object.keys(storeLocation[propName].inUse).length > 0;
-	};
-
-	/**
-	 * add the component to the "inUse" array
-	 * @param  {object} storeLocation - object being used as the store
-	 * @param  {string} propName      - check the "inUse" value for this prop
-	 * @param  {string} componentName - value to check for
-	 */
-	var setPropInUseForComponent = exports.setPropInUseForComponent = function setPropInUseForComponent(storeLocation, propName, componentName) {
-	    storeLocation[propName].inUse.push(componentName);
-	};
-
-	/**
-	 * removes the component from the "inUse" array
-	 * @param  {object} storeLocation - object being used as the store
-	 * @param  {string} propName      - check the "inUse" value for this prop
-	 * @param  {string} componentName - value to remove
-	 */
-	var unsetPropInUseForComponent = exports.unsetPropInUseForComponent = function unsetPropInUseForComponent(storeLocation, propName, componentName) {
-	    var componentPos = storeLocation[propName].inUse.indexOf(componentName);
-	    storeLocation[propName].inUse.splice(componentPos, 1);
-	};
-
-	/**
-	 * adds a new state property (object) to the MobX Store
-	 * @param  {object} storeLocation - object being used as the store
-	 * @param  {string} propName      - name used to reference state being added
-	 * @param  {object} propValue     - state object being added
-	 * @param  {string} componentName - first component using the new state object
-	 */
-	var addPropToStore = exports.addPropToStore = function addPropToStore(storeLocation, propName, propValue, componentName) {
-	    (0, _mobx.extendObservable)(storeLocation, _defineProperty({}, propName, propValue));
-	    storeLocation[propName].inUse = [];
-	    setPropInUseForComponent(storeLocation, propName, componentName);
-	};
-
-	// needs cleaning up as a lot of this functionality is handled by helper
-	// functions now
+	// populate the store with a list of users from a remote source
+	// could be turned into a more generic helper function
 	var fetchUsersList = exports.fetchUsersList = function fetchUsersList() {
-	    // only create the users property if it doesn't exist in the store
-	    if (checkStoreForProp(mobXGlobalStore, 'users')) {
-	        // do stuff since the prop already exists in the store
-	    } else {
-	            // get data and add it to the store
 
-	            // ==== async api call would go here ====
-	            var data = mockRemote.users;
+	    // does the 'users' prop exist in the global store?
+	    if ((0, _mobXStoreHelpers.checkStoreForProp)(mobXGlobalStore, 'users')) {
 
-	            // add state to the store and set "prop in use" flag for this component
-	            mobXGlobalStore = (0, _mobx.extendObservable)(mobXGlobalStore, { 'users': data });
+	        // is the ShowName component listed as using the prop?
+	        if (!(0, _mobXStoreHelpers.checkIsPropInUseByComponent)(mobXGlobalStore, 'users', 'ShowName')) {
+
+	            // component was not listed and needs to be added
+	            (0, _mobXStoreHelpers.setPropInUseForComponent)(mobXGlobalStore, 'users', 'ShowName');
 	        }
+	    } else {
+
+	        // get data and add it to the store
+	        // ==== async api call would go here ====
+	        var data = mockRemote.users;
+
+	        (0, _mobXStoreHelpers.addPropToStore)(mobXGlobalStore, 'users', data, 'ShowName');
+	    }
 	};
 
-	var checkNameValue = exports.checkNameValue = function checkNameValue(nameToCheck) {
-	    return mobXGlobalStore.users.find(function (i) {
-	        return i.name === nameToCheck;
-	    });
+	var buildStore = exports.buildStore = function buildStore() {
+	    fetchUsersList();
+	};
+
+	var cleanStore = exports.cleanStore = function cleanStore() {
+	    unsetPropInUseForComponent(mobXGlobalStore, 'users', 'ShowName');
+
+	    // only delete the 'users' prop from the store if it's no longer in use
+	    if (!(0, _mobXStoreHelpers.checkIsPropInUse)(mobXGlobalStore, 'users')) {
+	        (0, _mobXStoreHelpers.removePropFromStore)(mobXGlobalStore, 'users');
+	    }
+	};
+
+	var getSelectedDropdownName = exports.getSelectedDropdownName = function getSelectedDropdownName() {
+	    if ((0, _mobXStoreHelpers.checkStoreForProp)(mobXGlobalStore, 'selectedDropdownName')) {
+	        return mobXGlobalStore.selectedDropdownName;
+	    }
+
+	    // if the prop doesn't exist it means no name has been selected
+	    mobXGlobalStore = (0, _mobx.extendObservable)(mobXGlobalStore, { selectedDropdownName: 'Please select a name from the dropdown list' });
+
+	    return mobXGlobalStore.selectedDropdownName;
 	};
 
 /***/ },
 /* 171 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ShowNameDisplay = function (_Component) {
-	    _inherits(ShowNameDisplay, _Component);
-
-	    function ShowNameDisplay() {
-	        _classCallCheck(this, ShowNameDisplay);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ShowNameDisplay).apply(this, arguments));
-	    }
-
-	    _createClass(ShowNameDisplay, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "showNameDisplay" },
-	                this.props.selectedName
-	            );
-	        }
-	    }]);
-
-	    return ShowNameDisplay;
-	}(_react.Component);
-
-	//  declare PropTypes here to check that props match expected type
-
-
-	exports.default = ShowNameDisplay;
-	ShowNameDisplay.propTypes = {
-	    selectedName: _react.PropTypes.string.isRequired
-	};
-
-/***/ },
-/* 172 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	// import display components
-	// import ShowNameDisplay from './ShowNameDisplay.js';
-
-	var NameDropdownListView = function (_Component) {
-	    _inherits(NameDropdownListView, _Component);
-
-	    function NameDropdownListView() {
-	        _classCallCheck(this, NameDropdownListView);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(NameDropdownListView).apply(this, arguments));
-	    }
-
-	    _createClass(NameDropdownListView, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement("div", { className: "nameDropdownListView" });
-	        }
-	    }]);
-
-	    return NameDropdownListView;
-	}(_react.Component);
-
-	exports.default = NameDropdownListView;
-
-/***/ },
-/* 173 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
@@ -22183,6 +22039,424 @@
 	}
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.removePropFromStore = exports.addPropToStore = exports.unsetPropInUseForComponent = exports.setPropInUseForComponent = exports.checkIsPropInUse = exports.checkIsPropInUseByComponent = exports.checkStoreForProp = undefined;
+
+	var _mobx = __webpack_require__(171);
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	/**
+	 * Shared Helper Functions
+	 * =======================
+	 * in a production implementation of this it might be nice to include
+	 * some error handling on the helper functions where appropriate
+	 * try catch might be sufficient
+	 */
+
+	/**
+	 * checks the store for a specific property
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - check the store to see if this property exists
+	 * @return {bool}                 - returns true if the property exists in the store
+	 */
+	var checkStoreForProp = exports.checkStoreForProp = function checkStoreForProp(storeLocation, propName) {
+	    return storeLocation[propName] ? true : false;
+	};
+
+	/**
+	 * checks if the given component is using a specific property
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - check the "inUse" value for this prop
+	 * @param  {string} componentName - value to check for
+	 * @return {bool}                 - returns true if the property is being used
+	 */
+	var checkIsPropInUseByComponent = exports.checkIsPropInUseByComponent = function checkIsPropInUseByComponent(storeLocation, propName, componentName) {
+	    var result = storeLocation[propName].inUse.filter(function (i) {
+	        return i == componentName;
+	    });
+
+	    return result.length > 0;
+	};
+
+	/**
+	 * checks if a specific property is in use by any components
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - check the "inUse" value for this prop
+	 * @return {bool}                 - returns true if the property is being used
+	 */
+	var checkIsPropInUse = exports.checkIsPropInUse = function checkIsPropInUse(storeLocation, propName) {
+	    return Object.keys(storeLocation[propName].inUse).length > 0;
+	};
+
+	/**
+	 * add a specific component to the "inUse" array
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - check the "inUse" value for this prop
+	 * @param  {string} componentName - value to push into the "inUse" array
+	 */
+	var setPropInUseForComponent = exports.setPropInUseForComponent = function setPropInUseForComponent(storeLocation, propName, componentName) {
+	    storeLocation[propName].inUse.push(componentName);
+	};
+
+	/**
+	 * removes the component from the "inUse" array
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - target the "inUse" value for this prop
+	 * @param  {string} componentName - value to remove from the "inUse" array
+	 */
+	var unsetPropInUseForComponent = exports.unsetPropInUseForComponent = function unsetPropInUseForComponent(storeLocation, propName, componentName) {
+	    var componentPos = storeLocation[propName].inUse.indexOf(componentName);
+	    storeLocation[propName].inUse.splice(componentPos, 1);
+	};
+
+	/**
+	 * adds a new state property (object) to the MobX Store
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - name used to reference state being added
+	 * @param  {object} propValue     - state object being added
+	 * @param  {string} componentName - first component using the new state object
+	 */
+	var addPropToStore = exports.addPropToStore = function addPropToStore(storeLocation, propName, propValue, componentName) {
+	    storeLocation = (0, _mobx.extendObservable)(storeLocation, _defineProperty({}, propName, propValue));
+	    storeLocation[propName].inUse = [];
+	    setPropInUseForComponent(storeLocation, propName, componentName);
+	};
+
+	/**
+	 * removes an existing state property (object) from the MobX Store
+	 * @param  {object} storeLocation - object being used as the store
+	 * @param  {string} propName      - name used to reference state being removed
+	 */
+	var removePropFromStore = exports.removePropFromStore = function removePropFromStore(storeLocation, propName) {
+	    delete storeLocation[propName];
+	};
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ShowNameDisplay = function (_Component) {
+	    _inherits(ShowNameDisplay, _Component);
+
+	    function ShowNameDisplay() {
+	        _classCallCheck(this, ShowNameDisplay);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ShowNameDisplay).apply(this, arguments));
+	    }
+
+	    _createClass(ShowNameDisplay, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "showNameDisplay" },
+	                this.props.selectedName
+	            );
+	        }
+	    }]);
+
+	    return ShowNameDisplay;
+	}(_react.Component);
+
+	//  declare PropTypes here to check that props match expected type
+
+
+	exports.default = ShowNameDisplay;
+	ShowNameDisplay.propTypes = {
+	    selectedName: _react.PropTypes.string.isRequired
+	};
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// import display components
+	// import ShowNameDisplay from './ShowNameDisplay.js';
+
+	var NameDropdownListView = function (_Component) {
+	    _inherits(NameDropdownListView, _Component);
+
+	    function NameDropdownListView() {
+	        _classCallCheck(this, NameDropdownListView);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(NameDropdownListView).apply(this, arguments));
+	    }
+
+	    _createClass(NameDropdownListView, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement("div", { className: "nameDropdownListView" });
+	        }
+	    }]);
+
+	    return NameDropdownListView;
+	}(_react.Component);
+
+	exports.default = NameDropdownListView;
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	    function mrFactory(mobx, React, ReactDOM) {
+	        if (!mobx)
+	            throw new Error("mobx-react requires the MobX package")
+	        if (!React)
+	            throw new Error("mobx-react requires React to be available");
+
+	        var isDevtoolsEnabled = false;
+
+	        // WeakMap<Node, Object>;
+	        var componentByNodeRegistery = typeof WeakMap !== "undefined" ? new WeakMap() : undefined;
+	        var renderReporter = new mobx.SimpleEventEmitter();
+
+	        function findDOMNode(component) {
+	            if (ReactDOM)
+	                return ReactDOM.findDOMNode(component);
+	            return null;
+	        }
+
+	        function reportRendering(component) {
+	            var node = findDOMNode(component);
+	            if (node)
+	                componentByNodeRegistery.set(node, component);
+
+	            renderReporter.emit({
+	                event: 'render',
+	                renderTime: component.__$mobRenderEnd - component.__$mobRenderStart,
+	                totalTime: Date.now() - component.__$mobRenderStart,
+	                component: component,
+	                node: node
+	            });
+	        }
+
+	        var reactiveMixin = {
+	            componentWillMount: function() {
+	                // Generate friendly name for debugging
+	                var name = [
+	                    this.displayName || this.name || (this.constructor && (this.constructor.displayName || this.constructor.name)) || "<component>",
+	                    "#", this._reactInternalInstance && this._reactInternalInstance._rootNodeID,
+	                    ".render()"
+	                ].join("");
+
+	                var baseRender = this.render.bind(this);
+	                var self = this;
+	                var reaction = null;
+	                var isRenderingPending = false;
+	                function initialRender() {
+	                    reaction = new mobx.Reaction(name, function() {
+	                        if (!isRenderingPending) {
+	                            isRenderingPending = true;
+	                            if (typeof self.componentWillReact === "function")
+	                                self.componentWillReact();
+	                            React.Component.prototype.forceUpdate.call(self)
+	                        }
+	                    });
+	                    reactiveRender.$mobx = reaction;
+	                    self.render = reactiveRender;
+	                    return reactiveRender();
+	                }
+
+	                function reactiveRender() {
+	                    isRenderingPending = false;
+	                    var rendering;
+	                    reaction.track(function() {
+	                        if (isDevtoolsEnabled)
+	                            self.__$mobRenderStart = Date.now();
+	                        rendering = mobx.extras.allowStateChanges(false, baseRender);
+	                        if (isDevtoolsEnabled)
+	                            self.__$mobRenderEnd = Date.now();
+	                    });
+	                    return rendering;
+	                }
+
+	                this.render = initialRender;
+	            },
+
+	            componentWillUnmount: function() {
+	                this.render.$mobx && this.render.$mobx.dispose();
+	                if (isDevtoolsEnabled) {
+	                    var node = findDOMNode(this);
+	                    if (node) {
+	                        componentByNodeRegistery.delete(node);
+	                    }
+	                    renderReporter.emit({
+	                        event: 'destroy',
+	                        component: this,
+	                        node: node
+	                    });
+	                }
+	            },
+
+	            componentDidMount: function() {
+	                if (isDevtoolsEnabled)
+	                    reportRendering(this);
+	            },
+
+	            componentDidUpdate: function() {
+	                if (isDevtoolsEnabled)
+	                    reportRendering(this);
+	            },
+
+	            shouldComponentUpdate: function(nextProps, nextState) {
+	                // TODO: if context changed, return true.., see #18
+	                
+	                // if props or state did change, but a render was scheduled already, no additional render needs to be scheduled
+	                if (this.render.$mobx && this.render.$mobx.isScheduled() === true)
+	                    return false;
+	                
+	                // update on any state changes (as is the default)
+	                if (this.state !== nextState)
+	                    return true;
+	                // update if props are shallowly not equal, inspired by PureRenderMixin
+	                var keys = Object.keys(this.props);
+	                var key;
+	                if (keys.length !== Object.keys(nextProps).length)
+	                    return true;
+	                for(var i = keys.length -1; i >= 0, key = keys[i]; i--) {
+	                    var newValue = nextProps[key];
+	                    if (newValue !== this.props[key]) {
+	                        return true;
+	                    } else if (newValue && typeof newValue === "object" && !mobx.isObservable(newValue)) {
+	                        /**
+	                         * If the newValue is still the same object, but that object is not observable,
+	                         * fallback to the default React behavior: update, because the object *might* have changed.
+	                         * If you need the non default behavior, just use the React pure render mixin, as that one
+	                         * will work fine with mobx as well, instead of the default implementation of
+	                         * observer.
+	                         */
+	                        return true;
+	                    }
+	                }
+	                return false;
+	            }
+	        }
+
+	        function patch(target, funcName) {
+	            var base = target[funcName];
+	            var mixinFunc = reactiveMixin[funcName];
+	            if (!base) {
+	                target[funcName] = mixinFunc;
+	            } else {
+	                target[funcName] = function() {
+	                    base.apply(this, arguments);
+	                    mixinFunc.apply(this, arguments);
+	                }
+	            }
+	        }
+
+	        function observer(componentClass) {
+	            // If it is function but doesn't seem to be a react class constructor,
+	            // wrap it to a react class automatically
+	            if (typeof componentClass === "function" && !componentClass.prototype.render && !componentClass.isReactClass && !React.Component.isPrototypeOf(componentClass)) {
+	                return observer(React.createClass({
+	                    displayName:     componentClass.displayName || componentClass.name,
+	                    propTypes:       componentClass.propTypes,
+	                    contextTypes:    componentClass.contextTypes,
+	                    getDefaultProps: function() { return componentClass.defaultProps; },
+	                    render:          function() { return componentClass.call(this, this.props, this.context); }
+	                }));
+	            }
+
+	            if (!componentClass)
+	                throw new Error("Please pass a valid component to 'observer'");
+	            var target = componentClass.prototype || componentClass;
+
+	            [
+	                "componentWillMount",
+	                "componentWillUnmount",
+	                "componentDidMount",
+	                "componentDidUpdate"
+	            ].forEach(function(funcName) {
+	                patch(target, funcName)
+	            });
+
+	            if (!target.shouldComponentUpdate)
+	                target.shouldComponentUpdate = reactiveMixin.shouldComponentUpdate;
+	            componentClass.isMobXReactObserver = true;
+	            return componentClass;
+	        }
+
+	        function trackComponents() {
+	            if (typeof WeakMap === "undefined")
+	                throw new Error("[mobx-react] tracking components is not supported in this browser.");
+	            if (!isDevtoolsEnabled)
+	                isDevtoolsEnabled = true;
+	        }
+
+	        return ({
+	            observer: observer,
+	            reactiveComponent: function() {
+	                console.warn("[mobx-react] `reactiveComponent` has been renamed to `observer` and will be removed in 1.1.");
+	                return observer.apply(null, arguments);
+	            },
+	            renderReporter: renderReporter,
+	            componentByNodeRegistery: componentByNodeRegistery,
+	            trackComponents: trackComponents
+	        });
+	    }
+
+	    // UMD
+	    if (true) {
+	        module.exports = mrFactory(__webpack_require__(171), __webpack_require__(1), __webpack_require__(33));
+	    } else if (typeof define === 'function' && define.amd) {
+	        define('mobx-react', ['mobx', 'react', 'react-dom'], mrFactory);
+	    } else {
+	        this.mobxReact = mrFactory(this['mobx'], this['React'], this['ReactDOM']);
+	    }
+	})();
+
 
 /***/ }
 /******/ ]);

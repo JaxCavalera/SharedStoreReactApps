@@ -46,5 +46,9 @@ module.exports = {
     postcss: function() {
         return [autoprefixer({browsers: ['> 0.8%']}), precss];
     },
-    plugins: []
+    plugins: [],
+    resolve: {
+        root: path.resolve('./ProjectSpecificModules'),
+        extensions: ['', '.js']
+    }
 };
