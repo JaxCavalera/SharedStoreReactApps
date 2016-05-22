@@ -1,4 +1,4 @@
-import { extendObservable, autorun, computed } from 'mobx';
+import { extendObservable } from 'mobx';
 
 import {
     checkStoreForProp,
