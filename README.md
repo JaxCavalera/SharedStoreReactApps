@@ -103,13 +103,13 @@ Each widget has a dev and prod webpack config at the root directory. This config
 ![Project Directory Structure](ReadmeAssets/ProjectDirectoryStructure.png)    
 
 A Higher order Component (HOC) is used to combine the primary components inside a widget.
->This could be replaced by a Pod (View, Stylesheet, Actions) but since it's unlikely to have any functionality other than composing the widget's components. a View is more than sufficient.    
+>This could be replaced by a Pod (Container, Stylesheet, Logic) but since it's unlikely to have any functionality other than composing the widget's components. a Container is more than sufficient.    
 ![Component Structures](ReadmeAssets/ComponentsRootDirectoryStructure.png)    
 
-Each component contains a **View**, **Display**, **Actions** and **Stylesheet** file. Child components should be nested in a namespaced directory using the same pattern as their parent.    
+Each component contains a **Container**, **View**, **Logic** and **Stylesheet** file. Child components should be nested in a namespaced directory using the same pattern as their parent.    
 ![Features Overview Structure](ReadmeAssets/FeaturesOverviewStructure.png)    
 
-The MobX global store should be accessible from within the HOC and View Components. The approach to achieve this result will be to introduce the MobX Observable store at a level available throughout the entire Third Party Site i.e <body> or similar.
+The MobX global store should be accessible from within the HOC and Container Components. The approach to achieve this result will be to introduce the MobX Observable store at a level available throughout the entire Third Party Site i.e <body> or similar.
 
 There should be no performance cost making the entire MobX store available like this due to how MobX works (will need testing).
 
@@ -150,7 +150,7 @@ resolve: {
 }
 ```
 
-- Update component structures where needed to ensure that a separate view/display/actions/stylesheet are associated with the retrieval and presentation of collections of data (a list of todo tasks).
+- Update component structures where needed to ensure that a separate Container/View/Logic/stylesheet are associated with the retrieval and presentation of collections of data (a list of todo tasks).
 https://mobxjs.github.io/mobx/best/react-performance.html    
 
 [Back to the Top](#contents)    
